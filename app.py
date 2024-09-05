@@ -16,7 +16,7 @@ def hmm_pos_tagger(sentence):
         return model.predict(' '.join(words))
 
 # Set OpenAI API key
-openai.api_key = st.secrets["api_keys"]["OPENAI_API_KEY"]
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def gpt4_pos_tagger(sentence):
     allowed_tags = "{'X', 'ADV', 'PRT', 'CONJ', 'ADP', 'VERB', 'PRON', 'ADJ', 'NOUN', '.', 'NUM', 'DET'}"
