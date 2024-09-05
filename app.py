@@ -1,4 +1,4 @@
-
+# import streamlit as st
 import openai
 import math
 import dill
@@ -72,7 +72,7 @@ def create_comparison_table(sentence_words, gpt4_tags, hmm_tags):
     return table
 
 
-st.set_page_config(page_title="POS Tagger Demo", page_icon="📊", layout="wide")
+# st.set_page_config(page_title="POS Tagger Demo", page_icon="📊", layout="wide")
 # st.title("POS Tagger Comparison: HMM vs GPT-4")
 st.markdown("<h1 style='text-align: center;'>POS Tagger Comparison: HMM vs GPT-4</h1>", unsafe_allow_html=True)
 
