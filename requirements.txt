@@ -2,3 +2,6 @@ streamlit
 openai
 math
 dill
+langchain-community
+langchain
+python-dotenv
