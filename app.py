@@ -21,7 +21,7 @@ def hmm_pos_tagger(sentence):
         return model.predict(' '.join(words))
     
 # load_dotenv()
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 
 
