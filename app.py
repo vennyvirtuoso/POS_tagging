@@ -1,5 +1,6 @@
 import streamlit as st
 import openai
+from dotenv import load_dotenv
 import math
 import dill
 import os
@@ -18,8 +19,11 @@ def hmm_pos_tagger(sentence):
         model = dill.load(f)
         print(sentence)
         return model.predict(' '.join(words))
-
+    
+load_dotenv()
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+
+
 def gpt4_pos_tagger(sentence):
     allowed_tags = "{'X', 'ADV', 'PRT', 'CONJ', 'ADP', 'VERB', 'PRON', 'ADJ', 'NOUN', '.', 'NUM', 'DET'}"
     prompt = (
