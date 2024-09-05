@@ -1,11 +1,13 @@
 import streamlit as st
 import openai
+from dotenv import load_dotenv
+import math
 import dill
 import os
 
 POS_TAGGER_MODEL_FILE = "pos-tagger.pkl"
 
-# HMM POS Tagger function
+
 def hmm_pos_tagger(sentence):
     words = [word for word in sentence.split()]
     last_ch = words[-1][-1]
@@ -13,14 +15,15 @@ def hmm_pos_tagger(sentence):
         words[-1] = words[-1][:-1]
         words.append(last_ch)
 
-    with open(POS_TAGGER_MODEL_FILE, "rb") as f:
+    with open("pos-tagger.pkl", "rb") as f:
         model = dill.load(f)
+        print(sentence)
         return model.predict(' '.join(words))
+    
+load_dotenv()
+openai.api_key = st.secrets("OPENAI_API_KEY")
 
-# Set OpenAI API key using Streamlit Secrets
-openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# GPT-4 POS Tagger function
 def gpt4_pos_tagger(sentence):
     allowed_tags = "{'X', 'ADV', 'PRT', 'CONJ', 'ADP', 'VERB', 'PRON', 'ADJ', 'NOUN', '.', 'NUM', 'DET'}"
     prompt = (
@@ -44,18 +47,21 @@ def gpt4_pos_tagger(sentence):
 
     return tags
 
-# Create a comparison table
 def create_comparison_table(sentence_words, gpt4_tags, hmm_tags):
+
     table = "<table style='width:100%; border: 1px solid black; border-collapse: collapse;'>"
+
     table += "<tr><th style='border: 1px solid black; padding: 8px; text-align: left;'>Sentence</th>"
     for word in sentence_words:
         table += f"<td style='border: 1px solid black; padding: 8px;'>{word}</td>"
     table += "</tr>"
 
+
     table += "<tr><th style='border: 1px solid black; padding: 8px; text-align: left;'>GPT-4</th>"
     for tag in gpt4_tags:
         table += f"<td style='border: 1px solid black; padding: 8px; color: orange;'>{tag}</td>"
     table += "</tr>"
+
 
     table += "<tr><th style='border: 1px solid black; padding: 8px; text-align: left;'>HMM POS Tagger</th>"
     ind = 0
@@ -69,21 +75,24 @@ def create_comparison_table(sentence_words, gpt4_tags, hmm_tags):
     
     return table
 
-# Streamlit app setup
+
 st.set_page_config(page_title="POS Tagger Demo", page_icon="📊", layout="wide")
+# st.title("POS Tagger Comparison: HMM vs GPT-4")
 st.markdown("<h1 style='text-align: center;'>POS Tagger Comparison: HMM vs GPT-4</h1>", unsafe_allow_html=True)
 
-# Input text area
-sentence = st.text_area("", height=50, placeholder="Type your sentence here...")
 
-# Button to submit the sentence
-if st.button("Submit", use_container_width=True):
+
+
+sentence = st.text_area("Sentence Input", height=50, placeholder="Type your sentence here...", label_visibility="collapsed")
+
+
+
+   
+if st.button("Submit",use_container_width=True):
     if sentence.strip():
         sentence_words = sentence.split()
         gpt4_tags = gpt4_pos_tagger(sentence)
         hmm_tags = hmm_pos_tagger(sentence)
-        
-        # Clean tags output
         for i in range(len(gpt4_tags)):
             actual_tags = ''.join([c for c in gpt4_tags[i] if c != "'"])
             gpt4_tags[i] = actual_tags
