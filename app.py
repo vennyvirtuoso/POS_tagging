@@ -1,6 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 from dotenv import load_dotenv
+# import openai
 import math
 import dill
 import os
@@ -21,7 +22,7 @@ def hmm_pos_tagger(sentence):
         return model.predict(' '.join(words))
     
 # load_dotenv()
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+# openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 
 # code from https://platform.openai.com/docs/guides/chat-completions/getting-started
