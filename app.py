@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 import math
 import dill
@@ -24,7 +24,7 @@ def hmm_pos_tagger(sentence):
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 
-
+# code from https://platform.openai.com/docs/guides/chat-completions/getting-started
 def gpt4_pos_tagger(sentence):
     allowed_tags = "{'X', 'ADV', 'PRT', 'CONJ', 'ADP', 'VERB', 'PRON', 'ADJ', 'NOUN', '.', 'NUM', 'DET'}"
     prompt = (
@@ -34,14 +34,13 @@ def gpt4_pos_tagger(sentence):
         f"Sentence: '{sentence}'\n\n"
         "Output only the tags in the same order as the words, separated by spaces."
     )
-    
-    response = openai.ChatCompletion.create(
+    client = OpenAI()
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
-        ],
-        max_tokens=5000
+        ]
     )
     
     tags = response['choices'][0]['message']['content'].strip().split()
