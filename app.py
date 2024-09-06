@@ -5,18 +5,14 @@ import math
 from dotenv import load_dotenv
 import os
 
-POS_TAGGER_MODEL_FILE = "pos-tagger.pkl"
+POS_TAGGER_MODEL_FILE = "pos-tagger_02.pkl"
 
 def hmm_pos_tagger(sentence):
-    words = [word for word in sentence.split()]
-    last_ch = words[-1][-1]
-    if not last_ch.isalnum() and len(words[-1]) > 1:
-        words[-1] = words[-1][:-1]
-        words.append(last_ch)
+    sentence = sentence.strip()
 
     with open(POS_TAGGER_MODEL_FILE, "rb") as f:
         model = dill.load(f)
-        return model.predict(' '.join(words))
+        return [tag for word, tag in model.predict(sentence)]
 
 # Set OpenAI API key
 openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -30,7 +26,7 @@ def gpt4_pos_tagger(sentence):
         f"Sentence: '{sentence}'\n\n"
         "Output only the tags in the same order as the words, separated by spaces."
     )
-    
+    # code from https://www.newhorizons.com/resources/blog/the-complete-guide-for-using-the-openai-python-api
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
