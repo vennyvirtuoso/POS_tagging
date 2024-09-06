@@ -8,11 +8,15 @@ import os
 POS_TAGGER_MODEL_FILE = "pos-tagger_02.pkl"
 
 def hmm_pos_tagger(sentence):
-    sentence = sentence.strip()
+    words = [word for word in sentence.split()]
+    last_ch = words[-1][-1]
+    if not last_ch.isalnum() and len(words[-1]) > 1:
+        words[-1] = words[-1][:-1]
+        words.append(last_ch)
 
     with open(POS_TAGGER_MODEL_FILE, "rb") as f:
         model = dill.load(f)
-        return [tag for word, tag in model.predict(sentence)]
+        return [tag for word, tag in model.predict(' '.join(words))]
 
 # Set OpenAI API key
 openai.api_key = st.secrets["OPENAI_API_KEY"]
