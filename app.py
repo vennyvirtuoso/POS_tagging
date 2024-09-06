@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import os
 
 POS_TAGGER_MODEL_FILE = "pos-tagger.pkl"
-
+from collections import defaultdict
 def hmm_pos_tagger(sentence):
     words = [word for word in sentence.split()]
     last_ch = words[-1][-1]
