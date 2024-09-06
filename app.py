@@ -5,7 +5,7 @@ import math
 from dotenv import load_dotenv
 import os
 
-POS_TAGGER_MODEL_FILE = "pos-tagger_02.pkl"
+POS_TAGGER_MODEL_FILE = "pos-tagger.pkl"
 
 def hmm_pos_tagger(sentence):
     words = [word for word in sentence.split()]
